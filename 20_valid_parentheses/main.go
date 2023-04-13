@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"strings"
 )
 
 // Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
@@ -28,23 +27,25 @@ import (
 // Output: false
 
 func main() {
-	fmt.Println(isValid("{[]}"))
+	fmt.Println(isValid2("{[(]}"))
 }
 
 func isValid(s string) bool {
-	openBrackets := map[string]struct{}{
-		"[": {},
-		"{": {},
-		"(": {},
+	if len(s) == 0 || len(s)%2 == 1 {
+		return false
 	}
-	pairs := map[string]string{
-		"]": "[",
-		"}": "{",
-		")": "(",
+	openBrackets := map[rune]struct{}{
+		'[': {},
+		'{': {},
+		'(': {},
 	}
-	strSlice := strings.Split(s, "")
+	pairs := map[rune]rune{
+		']': '[',
+		'}': '{',
+		')': '(',
+	}
 	stack := Stack{}
-	for _, ss := range strSlice {
+	for _, ss := range s {
 		if _, ok := openBrackets[ss]; ok {
 			stack.Push(ss)
 		} else {
@@ -64,7 +65,7 @@ func isValid(s string) bool {
 }
 
 type Stack struct {
-	items []string
+	items []rune
 }
 
 func (s *Stack) Size() int {
@@ -74,6 +75,7 @@ func (s *Stack) Pop() error {
 	if s.Size() < 1 {
 		return errors.New("out of range")
 	}
+
 	if s.Size() == 1 {
 		s.items = nil
 		return nil
@@ -84,13 +86,44 @@ func (s *Stack) Pop() error {
 	return nil
 }
 
-func (s *Stack) Last() string {
+func (s *Stack) Last() rune {
 	if s.Size() == 0 {
-		return ""
+		return rune(0)
 	}
 	return s.items[len(s.items)-1]
 }
 
-func (s *Stack) Push(item string) {
+func (s *Stack) Push(item rune) {
 	s.items = append(s.items, item)
+}
+
+func isValid2(s string) bool {
+	if len(s) == 0 || len(s)%2 == 1 {
+		return false
+	}
+	openBrackets := map[rune]rune{
+		'[': ']',
+		'{': '}',
+		'(': ')',
+	}
+
+	var st []rune
+	for _, ss := range s {
+		val, ok := openBrackets[ss]
+		if ok {
+			st = append(st, val)
+		} else {
+			if len(st) == 0 {
+				return false
+			}
+			theLast := st[len(st)-1]
+			if theLast != ss {
+				return false
+			}
+
+			st = st[:len(st)-1]
+		}
+	}
+	return len(st) == 0
+
 }
