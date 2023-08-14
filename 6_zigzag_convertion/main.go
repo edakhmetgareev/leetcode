@@ -1,5 +1,7 @@
 package main
 
+import "strings"
+
 func main() {
 	result := convert("PAYPALISHIRING", 4)
 	println(result)
@@ -9,7 +11,6 @@ func convert(s string, numRows int) string {
 	if numRows > 1000 || len(s) > 1000 {
 		return ""
 	}
-	var res string
 
 	if numRows < 2 {
 		return s
@@ -17,7 +18,7 @@ func convert(s string, numRows int) string {
 
 	sign := true
 	cnt := -1
-	rows := make(map[int]string, numRows)
+	rows := make([]string, numRows)
 	for i := 0; i < len(s); i++ {
 		if i > 1 && (cnt == 0 || cnt >= numRows-1) {
 			sign = !sign
@@ -29,14 +30,13 @@ func convert(s string, numRows int) string {
 			cnt--
 		}
 
-		str := string(s[i])
-
-		rows[cnt] += str
+		rows[cnt] += string(s[i])
 	}
 
+	var res strings.Builder
 	for i := 0; i < numRows; i++ {
-		res += rows[i]
+		res.WriteString(rows[i])
 	}
 
-	return res
+	return res.String()
 }
