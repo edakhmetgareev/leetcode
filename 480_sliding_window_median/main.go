@@ -52,7 +52,7 @@ func main() {
 	}
 	_ = data
 	// result := medianSlidingWindow(data, 5000)
-	result := medianSlidingWindow([]int{1, 2}, 1)
+	result := medianSlidingWindow([]int{1, 2, 3, 4, 5, 6, 7, 7}, 3)
 	fmt.Println(result)
 }
 
@@ -76,8 +76,27 @@ func ReadInts() ([]int, error) {
 	return result, scanner.Err()
 }
 
-// Current version is too slow.
 func medianSlidingWindow(nums []int, k int) []float64 {
+	size := len(nums)
+	result := make([]float64, size/k)
+	// returns the input slice as the first element
+	if len(nums) <= k {
+		// TODO
+		// return [][]int{nums}
+	}
+
+	// allocate slice at the precise size we need
+	r := make([][]int, 0, len(nums)-k+1)
+
+	for i, j := 0, k; j <= len(nums); i, j = i+1, j+1 {
+		r = append(r, nums[i:j])
+	}
+
+	return r
+}
+
+// Current version is too slow.
+func medianSlidingWindow2(nums []int, k int) []float64 {
 	var result []float64
 	window := make([]int, k)
 	copy(window, nums[0:k])
