@@ -13,7 +13,7 @@ func merge(arr1 []int, arr2 []int) []int {
 	len2 := len(arr2)
 	i, j := 0, 0
 	res := make([]int, 0, len1+len2)
-	for x := 0; x < len1+len2; x++ {
+	for x := 0; x < min(len1, len2); x++ {
 		if i > len1-1 {
 			res = append(res, arr2[j:]...)
 			break
