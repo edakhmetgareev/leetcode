@@ -34,23 +34,37 @@ func main() {
 			Val: 2,
 		},
 	}
-	removeNthFromEnd(node, 1)
+	reverseListV2(node)
 	fmt.Printf("%+v", node)
 }
 
-func removeNthFromEnd(head *ListNode, n int) *ListNode {
-	dummy := &ListNode{Next: head}
-	fast, slow := dummy, dummy
-	for i := 0; i <= n; i++ {
-		fast = fast.Next
+func reverseList(head *ListNode) *ListNode {
+	var reversedList *ListNode
+	for head != nil {
+		if reversedList == nil {
+			reversedList = &ListNode{
+				Val: head.Val,
+			}
+		} else {
+			reversedList = &ListNode{
+				Val:  head.Val,
+				Next: reversedList,
+			}
+		}
+		head = head.Next
 	}
 
-	for fast != nil {
-		fast = fast.Next
-		slow = slow.Next
+	return reversedList
+}
+
+func reverseListV2(head *ListNode) *ListNode {
+	var reversedList *ListNode
+	for head != nil {
+		tmpNode := head.Next
+		head.Next = reversedList
+		reversedList = head
+		head = tmpNode
 	}
 
-	slow.Next = slow.Next.Next
-
-	return dummy.Next
+	return reversedList
 }
